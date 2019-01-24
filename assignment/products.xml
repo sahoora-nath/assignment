@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<products>
+    <product>
+        <id>1</id>
+        <name>Milk</name>
+        <price>1.30</price>
+    </product>
+    <product>
+        <id>2</id>
+        <name>Apples</name>
+        <price unitId='1'>1.0</price>
+        <discount>
+            <startDate>2019-01-21</startDate>
+            <endDate>2019-02-03</endDate>
+            <percentage>10</percentage>
+        </discount>
+        <!--
+        <discount>
+            <percentage>20</percentage>
+            <quantity>2</quantity>
+        </discount>
+        -->
+    </product>
+    <product>
+        <id>3</id>
+        <name>Bread</name>
+        <price>0.80</price>
+        <discount>
+            <startDate>2019-01-20</startDate>
+            <endDate></endDate>
+            <percentage>50</percentage>
+            <multibuy>
+                <productName>Soup</productName>
+                <quantity>2</quantity>
+            </multibuy>
+        </discount>
+    </product>
+    <product>
+        <id>4</id>
+        <name>Soup</name>
+        <price>0.65</price>
+    </product>
+</products>
+
+
+
