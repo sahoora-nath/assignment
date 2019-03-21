@@ -2,6 +2,7 @@ package com.ncr.nlp.service.impl;
 
 import com.ncr.nlp.service.NlpCalcService;
 import com.ncr.nlp.service.util.BasicOperator;
+import com.ncr.nlp.service.util.Bracket;
 import com.ncr.nlp.service.util.Number;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,8 @@ public class NlpCalcServiceImpl implements NlpCalcService {
                         return BasicOperator.fromAlias(token).getArithmeticSymbol();
                     } else if (Number.isNumber(token)) {
                         return Number.fromName(token).getValue();
+                    } else if (Bracket.isBracket(token)) {
+                        return Bracket.fromAlias(token).getValue();
                     } else {
                         throw new IllegalArgumentException("Unable to parse token-" + token);
                     }
@@ -48,11 +51,20 @@ public class NlpCalcServiceImpl implements NlpCalcService {
         for(String expression : evaluatedExpression) {
             if (BasicOperator.isOperator(expression)) {
                 BasicOperator basicOperator = BasicOperator.fromAlias(expression);
-                while (!stack.isEmpty() && basicOperator.hasLessPriority(BasicOperator.fromAlias(stack.peek()))) {
+                while (!stack.isEmpty() && BasicOperator.isOperator(stack.peek())
+                        && basicOperator.hasLessPriority(BasicOperator.fromAlias(stack.peek()))) {
                     output.add(stack.pop());
                 }
                 stack.push(expression);
-            } else {
+            } else if (Bracket.isLeftBracket(expression)) {
+                stack.push(expression);
+            } else if (Bracket.isRightBracket(expression)) {
+                while(!Bracket.isLeftBracket(stack.peek())) { //While there's not a left bracket at the top of the stack
+                    output.add(stack.pop()); //Pop operators from the stack onto the output queue
+                }
+                stack.pop(); //Pop the left bracket from the stack and discard it
+            }
+            else {
                 output.add(expression);
             }
         }
@@ -60,7 +72,9 @@ public class NlpCalcServiceImpl implements NlpCalcService {
         while (!stack.isEmpty()) {
             output.add(stack.pop());
         }
-
+        //a+b*c -> abc*+
+        //a*b+c -> ab*c+
+        //Reverse Polish Notation
         return output;
     }
 

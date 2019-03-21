@@ -66,6 +66,18 @@ public class NlpCalcServiceImplTest {
         assertEquals("-", outputList1.get(4));
         assertEquals("2", outputList1.get(5));
         assertEquals("+", outputList1.get(6));
+
+        List<String> asList2 = Arrays.asList("(", "5", "-", "2", ")", "*", "10", "+", "2");
+        List<String> outputList2 = nlpCalcService.processPrecendenceOperator(asList2);
+
+        //[5, 2, -, 10, *, 2, +]
+        assertEquals("5", outputList2.get(0));
+        assertEquals("2", outputList2.get(1));
+        assertEquals("-", outputList2.get(2));
+        assertEquals("10", outputList2.get(3));
+        assertEquals("*", outputList2.get(4));
+        assertEquals("2", outputList2.get(5));
+        assertEquals("+", outputList2.get(6));
     }
 
     @Test
